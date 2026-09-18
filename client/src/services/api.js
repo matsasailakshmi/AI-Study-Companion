@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 // =========================
 // AUTH
@@ -155,17 +155,13 @@ export const createProject = async (projectData) => {
 export const getMaterials = async (projectId) => {
   const token = localStorage.getItem("token");
 
-  // Cache-busting timestamp
   const cacheBuster = Date.now();
 
   const response = await fetch(
     `${API_URL}/materials/${projectId}?t=${cacheBuster}`,
     {
       method: "GET",
-
-      // Force browser to request fresh data
       cache: "no-store",
-
       headers: {
         Authorization: `Bearer ${token}`,
         "Cache-Control": "no-cache",
@@ -193,11 +189,9 @@ export const uploadMaterial = async (projectId, file) => {
 
   const response = await fetch(`${API_URL}/materials/${projectId}/upload`, {
     method: "POST",
-
     headers: {
       Authorization: `Bearer ${token}`,
     },
-
     body: formData,
   });
 
@@ -209,6 +203,10 @@ export const uploadMaterial = async (projectId, file) => {
 
   return data;
 };
+
+// =========================
+// AI TUTOR
+// =========================
 
 export const askTutor = async (projectId, question) => {
   const token = localStorage.getItem("token");
@@ -232,6 +230,10 @@ export const askTutor = async (projectId, question) => {
 
   return data;
 };
+
+// =========================
+// QUIZ
+// =========================
 
 export const generateQuiz = async (projectId) => {
   const token = localStorage.getItem("token");
